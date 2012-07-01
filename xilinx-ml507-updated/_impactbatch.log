@@ -1,0 +1,19 @@
+iMPACT Version: Feb  3 2011 12:38:08
+
+iMPACT log file Started on Wed May  9 13:07:08 2012
+
+Preference Table
+Name                 Setting             
+StartupClock         Auto_Correction     
+AutoSignature        False               
+KeepSVF              False               
+ConcurrentMode       False               
+UseHighz             False               
+ConfigOnFailure      Stop                
+UserLevel            Novice              
+MessageLevel         Detailed            
+svfUseTime           false               
+SpiByteSwap          Auto_Correction     
+AutoInfer            false               
+SvfPlayDisplayComments false               
+INFO:iMPACT - Unknown SVF keyword [tdi][ml507_bsp_u-boot.svf: line 102248]:[TDI]

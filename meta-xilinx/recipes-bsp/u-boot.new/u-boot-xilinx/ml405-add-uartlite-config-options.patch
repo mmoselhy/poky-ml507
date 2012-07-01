@@ -1,0 +1,48 @@
+From 203dc0ae69b8a9265536b6093e68008faa1fbbff Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso00@gmail.com>
+Date: Wed, 7 Mar 2012 22:18:39 -0600
+Subject: [PATCH 2/2] ml405: add uartlite config options
+
+* Add CONFIG_XILINX_UARTLITE options
+* From xparameters find out which serial module
+  is included in the hardware project and configure
+  accord the available device.
+* Rework patch
+
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+Signed-off-by: Adrian Alonso <aalonso00@gmail.com>
+---
+ include/configs/ml405.h |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
+
+diff --git a/include/configs/ml405.h b/include/configs/ml405.h
+index d6f4832..cad6337 100644
+--- a/include/configs/ml405.h
++++ b/include/configs/ml405.h
+@@ -181,6 +181,15 @@
+ #define CFG_MEMTEST_END		0x0C00000	/* 4 ... 12 MB in DRAM	*/
+ 
+ /*
++ * UartLite serial console
++ */
++#if defined XPAR_UARTLITE_0_BASEADDR
++#define CONFIG_XILINX_UARTLITE
++#define CONFIG_SERIAL_BASE      XPAR_UARTLITE_0_BASEADDR
++#define CONFIG_BAUDRATE         XPAR_UARTLITE_0_BAUDRATE
++#define XPAR_UART_0_CLOCK_FREQ_HZ XPAR_PLB_CLOCK_FREQ_HZ
++#elif defined XPAR_UARTNS550_0_BASEADDR
++/*
+  * 16550 UART and console
+  */
+ #define CONFIG_CONS_INDEX	1
+@@ -190,6 +199,7 @@
+ #define CFG_NS16550_REG_SIZE	-4
+ #define CFG_NS16550_CLK		XPAR_XUARTNS550_CLOCK_HZ
+ #define CFG_NS16550_COM1	(XPAR_UARTNS550_0_BASEADDR + 0x1003)
++#endif
+ 
+ #define CFG_BAUDRATE_TABLE	\
+ 	{300, 600, 1200, 2400, 4800, 9600, 19200, 38400,115200}
+-- 
+1.7.7.6
+

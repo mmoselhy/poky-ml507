@@ -1,0 +1,35 @@
+From 9d8a9331156dcba4fe1aefb066a28f67c46468b4 Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso00@gmail.com>
+Date: Fri, 17 Dec 2010 15:58:53 -0600
+Subject: [PATCH 2/2] ml507: replace hardcode macros for uartns550
+
+* Replace hardcoded macros for setting PLB and uart
+  frecuency
+
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+---
+ board/xilinx/ml507/ml507.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/board/xilinx/ml507/ml507.c b/board/xilinx/ml507/ml507.c
+index 8e6970e..0ef81c3 100644
+--- a/board/xilinx/ml507/ml507.c
++++ b/board/xilinx/ml507/ml507.c
+@@ -137,13 +137,13 @@ get_sys_info(sys_info_t * sysInfo)
+ {
+ 	sysInfo->freqProcessor = XPAR_CORE_CLOCK_FREQ_HZ;
+
+-	sysInfo->freqPLB = XPAR_UARTNS550_0_CLOCK_FREQ_HZ;
++	sysInfo->freqPLB = XPAR_UART_0_CLOCK_FREQ_HZ;
+ 	sysInfo->freqPCI = 0;
+
+ 	/* setup the uart clock frequency in the global data otherwise the 
+ 	 * fdt fixups on the device tree hoses it up
+ 	 */
+-	gd->uart_clk = XPAR_UARTNS550_0_CLOCK_FREQ_HZ;
++	gd->uart_clk = XPAR_UART_0_CLOCK_FREQ_HZ;
+ }
+
+ /*-----------------------------------------------------------------------------
+--
+1.7.3.3

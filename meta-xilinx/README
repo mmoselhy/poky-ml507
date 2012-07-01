@@ -1,0 +1,20 @@
+OpenEmbedded/Yocto BSP layer for Xilinx reconfigurable platforms
+=================================================================
+
+This layer provides support for Xilinx reconfigurables platforms
+for use with OpenEmbedded and/or Yocto.
+
+This layer depends on:
+
+URI: git://git.yoctoproject.org/poky.git
+branch: master
+revision: HEAD
+
+Contributing
+------------
+
+To contribute to this layer you should send patches for review to the
+mailing list.
+
+Mailing list: yocto@yoctoproject.org
+Source code: git://git.yoctoproject.org/meta-xilinx

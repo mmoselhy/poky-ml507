@@ -1,0 +1,27 @@
+From 19f452770d77ba6bf0382c99e124e134b26cb8f6 Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso@secretlab.ca>
+Date: Wed, 24 Nov 2010 14:35:26 -0600
+Subject: [PATCH] linux-xilinx: do not use -OS option
+
+* Fix error: Do not use -Os option if --enable-target-optspace
+  is not set.
+* Gcc optospace options is disabled for powerpc machines
+
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+---
+ arch/powerpc/boot/Makefile |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Index: git/arch/powerpc/boot/Makefile
+===================================================================
+--- git.orig/arch/powerpc/boot/Makefile
++++ git/arch/powerpc/boot/Makefile
+@@ -20,7 +20,7 @@
+ all: $(obj)/zImage
+ 
+ BOOTCFLAGS    := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+-		 -fno-strict-aliasing -Os -msoft-float -pipe \
++		 -fno-strict-aliasing -msoft-float -pipe \
+ 		 -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
+ 		 -isystem $(shell $(CROSS32CC) -print-file-name=include)
+ BOOTAFLAGS	:= -D__ASSEMBLY__ $(BOOTCFLAGS) -traditional -nostdinc

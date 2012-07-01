@@ -1,0 +1,15 @@
+#!/bin/sh
+# Xilinx Webpack 13.1
+XILINX_BASE="/media/sda2/becks/Tools_Sources/SW_IDEs/X_installed/ISE_DS"
+DISPLAY=:0
+source ${XILINX_BASE}/settings64.sh
+source ${XILINX_BASE}/ISE/.settings64.sh
+source ${XILINX_BASE}/EDK/.settings64.sh
+# No need to preload usb library if you installed in a location
+# where xlnx tools can find it
+#export XIL_IMPACT_USE_LIBUSB=0
+#export LD_PRELOAD=/usr/local/lib/libusb-driver.so
+# Optional Xilinx license definitions, if you have access to them
+#export XILINXD_LICENSE_FILE=”2100@pcdesign;X:\licenses\Xilinx.lic”
+#export LM_LICENSE_FILE=”2100@pcdesign;X:\licenses\Xilinx.lic”
+

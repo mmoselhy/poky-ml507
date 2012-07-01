@@ -1,0 +1,43 @@
+From 7fbe3ac8b54d6db8202380c5a0f7697cc883b2bd Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso@secretlab.ca>
+Date: Mon, 4 Jul 2011 13:26:45 -0500
+Subject: [PATCH] board: microblaze monitor flash len
+
+* Flash address on Microblaze systems could be on higher
+ addresses then ram. This patch fixed this assumption
+ and flash can be located on any address.
+* Redo patch
+
+Signed-off-by: Michal Simek <monstr@...>
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+---
+ arch/microblaze/lib/board.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/arch/microblaze/lib/board.c b/arch/microblaze/lib/board.c
+index 588c3e4..e74a6b1 100644
+--- a/arch/microblaze/lib/board.c
++++ b/arch/microblaze/lib/board.c
+@@ -54,6 +54,10 @@ extern int timer_init (void);
+ extern void fsl_init2 (void);
+ #endif
+ 
++/* Section symbols */
++extern char *__end;
++extern char *__text_start;
++
+ /*
+  * All attempts to come up with a "common" initialization sequence
+  * that works for all boards and architectures failed: some of the
+@@ -105,6 +109,8 @@ void board_init (void)
+ 	bd->bi_memsize = CONFIG_SYS_SDRAM_SIZE;
+ 	gd->flags |= GD_FLG_RELOC;      /* tell others: relocation done */
+ 
++	monitor_flash_len = __end - __text_start;
++
+ 	/*
+ 	 * The Malloc area is immediately below the monitor copy in DRAM
+ 	 * aka CONFIG_SYS_MONITOR_BASE - Note there is no need for reloc_off
+-- 
+1.7.5.4
+

@@ -1,0 +1,36 @@
+From 111cbbadbf09b6570567b22962de4a80180aabe1 Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso@secretlab.ca>
+Date: Thu, 16 Dec 2010 17:39:35 -0600
+Subject: [PATCH 2/2] ml405: replace hardcode macros for uartns550
+
+* Replace hardcoded macros for setting PLB and uart
+  frecuency
+
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+---
+ board/xilinx/ml405/ml405.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/board/xilinx/ml405/ml405.c b/board/xilinx/ml405/ml405.c
+index 76dd5e5..0800b10 100755
+--- a/board/xilinx/ml405/ml405.c
++++ b/board/xilinx/ml405/ml405.c
+@@ -138,13 +138,13 @@ get_sys_info(sys_info_t * sysInfo)
+ 	sysInfo->freqProcessor = XPAR_CORE_CLOCK_FREQ_HZ;
+ 
+ 	/* only correct if the PLB and OPB run at the same frequency */
+-	sysInfo->freqPLB = XPAR_UARTNS550_0_CLOCK_FREQ_HZ;
++	sysInfo->freqPLB = XPAR_UART_0_CLOCK_FREQ_HZ;
+ 	sysInfo->freqPCI = 0;
+ 
+ 	/* setup the uart clock frequency in the global data otherwise the 
+ 	 * fdt fixups on the device tree hoses it up
+ 	 */
+-	gd->uart_clk = XPAR_UARTNS550_0_CLOCK_FREQ_HZ;
++	gd->uart_clk = XPAR_UART_0_CLOCK_FREQ_HZ;
+ }
+ 
+ /*-----------------------------------------------------------------------------
+-- 
+1.7.2.3
+

@@ -1,0 +1,29 @@
+From 3157d5fbc18f6aba7cb7954bd1a6fc82d7b515d2 Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso@secretlab.ca>
+Date: Mon, 4 Jul 2011 13:58:23 -0500
+Subject: [PATCH] cfi_flash: define monitor_flash_len
+
+* Define monitor_flash_len from global config parameters
+  CONFIG_SYS_MONITOR_LEN.
+* Fix undefined reference
+
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+---
+ drivers/mtd/cfi_flash.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/mtd/cfi_flash.c b/drivers/mtd/cfi_flash.c
+index c92c7a7..572c383 100644
+--- a/drivers/mtd/cfi_flash.c
++++ b/drivers/mtd/cfi_flash.c
+@@ -64,6 +64,7 @@
+ 
+ static uint flash_offset_cfi[2] = { FLASH_OFFSET_CFI, FLASH_OFFSET_CFI_ALT };
+ static uint flash_verbose = 1;
++unsigned long monitor_flash_len = CONFIG_SYS_MONITOR_LEN;
+ 
+ flash_info_t flash_info[CFI_MAX_FLASH_BANKS];	/* FLASH chips info */
+ 
+-- 
+1.7.5.4
+

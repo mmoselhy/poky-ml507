@@ -1,0 +1,31 @@
+From 4537cc92b5c149fbcb204d8e904a7ee20b8f4b1c Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso@secretlab.ca>
+Date: Mon, 6 Dec 2010 23:01:03 -0600
+Subject: [PATCH 2/2] uboot: remove inline qualifier from show_boot_progress
+
+* Remove inline qualifier from show_boot_progress
+* Gcc 4.5.1 complains about
+  main.c:51:13: error: inline function 'show_boot_progress'
+  cannot be declared weak
+
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+---
+ common/main.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/common/main.c b/common/main.c
+index 187ef8a..e2f8bb2 100644
+--- a/common/main.c
++++ b/common/main.c
+@@ -48,7 +48,7 @@ DECLARE_GLOBAL_DATA_PTR;
+  * Board-specific Platform code can reimplement show_boot_progress () if needed
+  */
+ void inline __show_boot_progress (int val) {}
+-void inline show_boot_progress (int val) __attribute__((weak, alias("__show_boot_progress")));
++void show_boot_progress (int val) __attribute__((weak, alias("__show_boot_progress")));
+ 
+ #if defined(CONFIG_BOOT_RETRY_TIME) && defined(CONFIG_RESET_TO_RETRY)
+ extern int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);		/* for do_reset() prototype */
+-- 
+1.7.2.3
+

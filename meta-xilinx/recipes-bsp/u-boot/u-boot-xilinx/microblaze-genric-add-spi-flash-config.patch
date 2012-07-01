@@ -1,0 +1,27 @@
+From b4ed80e891a8bdcdc7c6ac91fbce09841576bf62 Mon Sep 17 00:00:00 2001
+From: Adrian Alonso <aalonso@secretlab.ca>
+Date: Tue, 26 Apr 2011 21:43:13 -0500
+Subject: [PATCH] microblaze-generic: add spi flash config options
+
+* Add XPAR_SPI_FLASH configuratiotn option
+* Define base address and flash memory size
+
+Signed-off-by: Adrian Alonso <aalonso@secretlab.ca>
+---
+ include/configs/microblaze-generic.h |    3 +++ 
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+Index: git/include/configs/microblaze-generic.h
+===================================================================
+--- git.orig/include/configs/microblaze-generic.h
++++ git/include/configs/microblaze-generic.h
+@@ -202,6 +202,9 @@
+ #elif XPAR_EMC_0_S_AXI_MEM0_BASEADDR
+ 	#define	CONFIG_SYS_FLASH_BASE		XPAR_EMC_0_S_AXI_MEM0_BASEADDR
+ 	#define	CONFIG_SYS_FLASH_SIZE		(XPAR_EMC_0_S_AXI_MEM0_HIGHADDR - XPAR_EMC_0_S_AXI_MEM0_BASEADDR + 1)
++#elif XPAR_SPI_FLASH_BASEADDR
++    #define CONFIG_SYS_FLASH_BASE       XPAR_SPI_FLASH_BASEADDR
++    #define CONFIG_SYS_FLASH_SIZE       (XPAR_SPI_FLASH_HIGHADDR - XPAR_SPI_FLASH_BASEADDR + 1)
+ #else
+ 	#error "Flash is not included in the system"
+ #endif 
