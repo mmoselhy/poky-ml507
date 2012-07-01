@@ -1,0 +1,213 @@
+============================================================================================
+This file explains the steps to configure and install openembedded for Virtex-5 ml507 board. ||USING YOCTO PROJECT||
+============================================================================================
+The target from this document:
+Building openembedded environment and get images to run Angstrom on ml507.
+which includes :
+uImage.bin
+root file system 
+kernel modules
+u-boot.ace (As the board need this no u-boot.bin)
+======================================================================================
+
+1- Getting the poky builder and openembedded environment.
+---------------------------------------------------------
+Use a partition with at least 20GB freespace -
+then Go to the directory underwhich you'll install openembedded.
+Through the document I'll name it as $(OE_ROOT)
+
+
+- Downloading the environment:
+  >> cd $(OE_ROOT)
+  >> git clone git://git.yoctoproject.org/poky.git
+  >> cd poky
+- As we all know, yocto project divides everything into layers and in the poky directory you'll find the common basic layers.
+
+So we want to use Angstrom distribution as the linux dist on the board so we will need the Angstrom layer.
+
+ >> git clone http://github.com/Angstrom-distribution/meta-angstrom.git
+
+also we need meta-oe for a lot of dependencies to build the images.
+ >> git clone git://git.openembedded.org/meta-openembedded
+
+ALSO, the Board specific layers.
+
+ >> git clone git://git.yoctoproject.org/meta-xilinx
+
+We also need the Hardware reference guide for ml507 board. 
+
+ >> git clone git://github.com/aalonso/xilinx-ml507-updated.git
+ >> git clone git://github.com/aalonso/xilinx-ml507.git
+ >> cp -rf xilinx-ml507/* xilinx-ml507-updated/
+We have to download the xilinx-ml507 and the updated version as we'll cbine them together to get the errors-free one.
+
+
+
+==============================================================================================================================================
+2-Configuration Phase:
+----------------------
+Now we have everything. Lett's go to the configuration phase .
+
+in which we will configure files for our target board Virtex-5 ml507
+
+2.1 -Basic configuration:
+--------------------
+First of all. source the oe-init-dev to set all the env variables required.
+
+ >> source oe-init-dev
+ 
+You'll be automatically directed to the build directory.
+
+Configureing bblayers.conf and local.conf 
+Hints:
+-bblayers.conf --- contains all the layer's that bitbake will parse its files and resolve all dependencies from these layers.
+-local.conf    --- you use it to configure the target board and the distribution and alot of general configurations.
+
+
+ >>vi conf/bblayers.conf
+ 
+Put all the layers we've downloaded - to look like my bblayers.conf 
+-----------------------------------------------------------------------------------------------------------------------------
+# LAYER_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+LCONF_VERSION = "4"
+
+BBFILES ?= ""
+BBLAYERS ?= " \
+  $(OE_BASE)/meta \
+  $(OE_BASE)/meta-yocto \
+  $(OE_BASE)/meta-angstrom \
+  $(OE_BASE)/meta-openembedded/meta-oe \
+  $(OE_BASE)/meta-xilinx \
+  "
+---------------------------------------------------------------------------------------------------------------------------------
+
+Then configure local.conf
+  >>vi local.conf
+
+you can find my local.conf in the attached .zip file.
+
+Hints:
+ There're two variables that are used to speed up the whole process by parallelism.
+BB_NUMBER_THREADS AND PARALLEL_MAKE
+Set the number to equal double your actual cores. EX: if you've 2 cores then set it to 4.
+
+Set the machine and target cpu as follows
+MACHINE = "virtex5"
+TARGET_ARCH = "powerpc"
+
+Also, set the hardware specific path that will be used later and know why we're using them.
+XILINX_BSP_PATH = "$(OE_BASE)/xilinx-ml507-updated"
+XILINX_BOARD = "ml507"
+
+Also, If you want to change the download directory to another location use this variable - as openembedded will download a lot of packages before extracting them so you'll need a big space for this.
+DL_DIR ?= $(Required_Location)
+
+
+Also set the distribution
+DISTRO ?= "angstrom-v2012.x"
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+2.2- Advanced configuration
+----------------------------
+
+Here,you'll configure files to prevent future errors while you build (Fixing all the errors that faced me during the build)
+
+2.2- Advanced configuration
+----------------------------
+
+Here,you'll configure files to prevent future errors while you build (Fixing all the errors that faced me during the build)
+
+2.2- Advanced configuration
+----------------------------
+
+Here,you'll configure files to prevent future errors while you build (Fixing all the errors that faced me during the build)
+
+2.2.1:
+=====
+  >> cd $(OE_BASE)/meta-xilinx/conf/machine/include/tune-ppc440.inc
+Manually set the PKGARCH as it can't set it automatically.
+My modifications in the tune-ppc440.inc attached with this README. 
+
+2.2.2:
+=====
+Correcting linux kernel for the lm507 - to set the kernel version and some patches and include files.
+
+This isn't found in the meta-xilinx master branch on git. 
+We will get this modification from a developer work that hasn't yet been delivered to the master stream. but this is the right change.
+
+untar the attached .zip called recipes-kernel instead of the one found in $(OE_BASE)/meta-xilinx/recipes-kernel
+I got the tar file from the developer's branch on yocto git - http://git.yoctoproject.org/cgit/cgit.cgi/meta-xilinx/tree/?h=aalonso/external-toolchain
+
+2.23:
+=====
+Renaming file as the old name isn't valid anymore.
+
+  >> cd $(OE_BASE)/meta-xilinx/recipes-core/util-linux
+  >> mv util-linux_2.21.bbappend util-linux_2.21.1.bbappend
+
+Source :  http://comments.gmane.org/gmane.linux.embedded.yocto.general/6213
+
+========================================================================================================================================================
+3- Building 
+-----------
+After all the configuration let's start bitbaking 
+
+  >>cd $(OE_BASE)
+  >>bitbake core-image-minimal
+
+After it ends you'll have the generated images in 
+ >> $(OE_BASE)/build/tmp-eglibc/deploy/images/virtex5
+
+	You'll have these images:
+Angstrom-core-image-minimal-eglibc-ipk-v2012.05-core-virtex5.rootfs.tar.gz
+modules-3.0.0-r8-virtex5.tgz
+u-boot-virtex5-v2009.11-r15.bin
+uImage-2.6.37-r8-virtex5-20120506192046.dtb
+uImage-2.6.37-r8-virtex5-20120506192446.bin
+
+Note: we have the u-boot binary file and the kernel image along with the Device Tree Blob file ...also the root file system along with the kernel modules
+
+NOW we're very close to our target: but we need the u-boot.ace file not .bin
+and the ace file is a combination between bitstream file and u-boot.elf
+
+=========================================================================================================================================================
+4-Constructing ml507_bsp_u-boot.ace
+------------------------------------
+It's time to use the hardware specific directory - xilinx-ml507-updated along with xilinx 13.1 ISE
+Note : After finishing Openembedded you'll have the u-boot elf file generated in $(OE_BASE)/xlnx-updated
+
+
+Now, Install xilinx on any location you want. I'll refer it to $(XILINX_INSTALL)
+
+  >>cd $(OE_BASE)/xilinx-ml507-updated
+  The genace_all.sh script is used to generate ace file from u-boot elf file and bitstream file.
+  It uses environment variables from Xilinx so we needed to install it.
+  Make a file called xlnx-env that holds the env vars that will be used by geneace_all.sh
+  >>vi xlnx-env
+add this text 
+===============================================================
+#!/bin/sh
+# Xilinx Webpack 13.1
+XILINX_BASE=$(XILINX_INSTALL)/ISE_DS"
+DISPLAY=:0
+source ${XILINX_BASE}/settings64.sh
+source ${XILINX_BASE}/ISE/.settings64.sh
+source ${XILINX_BASE}/EDK/.settings64.sh
+
+===============================================================
+Then copy the bitstream file "download.bit" to its destination if it wasn't found.
+The file is attached in the .zip file.
+
+Copy download.bit into $(OE_BASE)/xilinx-ml507-updated/implementation
+
+Then run the script
+    >>./geneace_all.sh
+
+It will create a directory ML507 inside $(OE_BASE)/xilinx-ml507-updated
+contains a lot of directories. 
+we are interested only in cfg2 directory which contains the ml507_bsp_u-boot.ace file.
+So, this file along with the images generated before are the images required to be shipped to the board.
+Hence we achieved our target of building the images for Virtex-5 ml507 board using yocto.
+============================================================================================================================================================
