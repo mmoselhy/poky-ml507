@@ -1,0 +1,3 @@
+SANITY_VERSION 1
+TMPDIR /media/OE/virtex/poky/build/tmp-eglibc
+SSTATE_DIR /media/OE/virtex/poky/build/sstate-cache
